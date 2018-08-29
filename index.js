@@ -6,17 +6,19 @@ const cmd = require("node-cmd")
 const PORT = process.env.PORT || 8080
 const SECRET = conf.secret;
 const REPO = conf.repo;
+const URL_PATH = conf.urlPath
 
 const http = require("http")
 const createHandler = require("github-webhook-handler")
 const handler = createHandler({
-  path: "/",
+  path: URL_PATH,
   secret: SECRET
 })
 
 
 http.createServer((req, res) => {
   handler(req, res, (err) => {
+    console.log("error");
     res.statusCode = 404
     res.end("no such location")
   })
@@ -32,10 +34,12 @@ handler.on("push", (event) => {
   const payload = event.payload
   const repoName = payload.repository.name
   const branch = payload.ref.split("/").pop()
-  if (repoName === REPOSITORY_NAME && branch === "master") {
-    cmd.get(`cd ${conf.dir} && git pull && npm run rebuild`, (e, d, se) => {
+  console.log("Pushed");
+  if (repoName === REPO && branch === "master") {
+    cmd.get(`cd ${conf.dir} && git pull`, (e, d, se) => {
       console.log(d ? d : "");
       console.log(e ? e : "");
       console.log(se ? se : "");
     });
   }
+});

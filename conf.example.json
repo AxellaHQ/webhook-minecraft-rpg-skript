@@ -1,5 +1,6 @@
 {
 	"secret": "put your webhook secret",
 	"repo": "minecraft-rpg-skript",
+	"urlPath": "put your url path",
 	"dir": "put your repository url"
 }
